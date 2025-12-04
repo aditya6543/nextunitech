@@ -1,5 +1,8 @@
-NextUnitech AI Platform
+Production-Grade DevSecOps Project: NextUnitech AI Platform
+
 <p align="center"> <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" /> <img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-blue?style=flat-square" /> <img src="https://img.shields.io/badge/Architecture-Production%20Grade-orange?style=flat-square" /> <img src="https://img.shields.io/badge/Infrastructure-Terraform%20%2B%20AWS-yellow?style=flat-square" /> <img src="https://img.shields.io/badge/Kubernetes-Multi--Node%20Cluster-326ce5?style=flat-square&logo=kubernetes&logoColor=white" /> <img src="https://img.shields.io/badge/CI--CD-Jenkins-red?style=flat-square&logo=jenkins&logoColor=white" /> <img src="https://img.shields.io/badge/Security-Gitleaks%20%2F%20Trivy%20%2F%20SonarQube-orange?style=flat-square" /> <img src="https://img.shields.io/badge/GitOps-ArgoCD-0aaaff?style=flat-square&logo=argo&logoColor=white" /> <img src="https://img.shields.io/badge/Monitoring-Prometheus%20%2B%20Grafana-yellow?style=flat-square&logo=grafana&logoColor=white" /> <img src="https://img.shields.io/badge/Stack-Fullstack%20App-green?style=flat-square" /> </p>
+
+
 Enterprise-Grade DevSecOps Blueprint for a Full-Stack AI Application on AWS & Kubernetes
 
 
@@ -20,6 +23,11 @@ It demonstrates how to design and operate a secure, observable, and automated pl
 The repository is structured to showcase real-world Platform Engineering practices, including shift-left security, GitOps delivery, immutable infrastructure, and enterprise-ready documentation.
 This project is ideal for recruiters evaluating DevOps skills, developers learning modern cloud-native patterns, and engineers who want to fork, extend, and deploy a realistic platform.
 
+
+
+
+
+
 Preview Screenshots
 
 | Screenshot | Description |
@@ -30,74 +38,80 @@ Preview Screenshots
 | ![CD Pipeline](photos/cd.jpg) | **CD Pipeline Updating Kubernetes Manifests** |
 | ![ArgoCD](photos/agrocd.jpg) | **ArgoCD GitOps Deployment View** |
 | ![Grafana](photos/grafana.jpg) | **Monitoring Dashboard (Grafana)** |
+
+
+
+
+
+
 Feature Highlights
+ * End-to-End DevSecOps Platform
+    Complete lifecycle from code commit → CI (build/test/scan) → containerization → GitOps-based CD → monitoring and feedback.
 
-End-to-End DevSecOps Platform
-Complete lifecycle from code commit → CI (build/test/scan) → containerization → GitOps-based CD → monitoring and feedback.
+* Infrastructure as Code with Terraform
+     Custom VPC, subnets, route tables, and security groups.
 
-Infrastructure as Code with Terraform
+    EC2 instances for Kubernetes master and workers.
 
-Custom VPC, subnets, route tables, and security groups.
+    Application Load Balancer (ALB) with Route53 integration and TLS termination using AWS ACM.
 
-EC2 instances for Kubernetes master and workers.
+* Self-Managed Kubernetes Cluster (kubeadm)
 
-Application Load Balancer (ALB) with Route53 integration and TLS termination using AWS ACM.
+     One control-plane node and multiple worker nodes.
 
-Self-Managed Kubernetes Cluster (kubeadm)
+     Cluster bootstrapped via kubeadm for full control and learning.
 
-One control-plane node and multiple worker nodes.
+     Calico CNI for networking, NGINX Ingress for traffic routing.
 
-Cluster bootstrapped via kubeadm for full control and learning.
+* Production-Ready Application Stack
 
-Calico CNI for networking, NGINX Ingress for traffic routing.
+     Frontend: React + Vite + Tailwind + modern UI patterns.
 
-Production-Ready Application Stack
+     Backend: FastAPI with async I/O, OpenAI integration, and MongoDB access.
 
-Frontend: React + Vite + Tailwind + modern UI patterns.
+     Database: MongoDB for chat history and user data persistence.
 
-Backend: FastAPI with async I/O, OpenAI integration, and MongoDB access.
+* Shift-Left Security / DevSecOps
 
-Database: MongoDB for chat history and user data persistence.
+     Gitleaks: Prevents hardcoded secrets from entering the repository.
 
-Shift-Left Security / DevSecOps
+     Trivy: Filesystem and image vulnerability scanning.
 
-Gitleaks: Prevents hardcoded secrets from entering the repository.
+     SonarQube: Static code analysis, code smells, coverage, and quality gates.
 
-Trivy: Filesystem and image vulnerability scanning.
+     OWASP Dependency-Check: Detects vulnerable third-party dependencies.
 
-SonarQube: Static code analysis, code smells, coverage, and quality gates.
+* GitOps Delivery with ArgoCD
 
-OWASP Dependency-Check: Detects vulnerable third-party dependencies.
+     Kubernetes manifests stored in Git as the single source of truth.
 
-GitOps Delivery with ArgoCD
+     ArgoCD continuously reconciles the desired state from Git to the cluster.
 
-Kubernetes manifests stored in Git as the single source of truth.
+     Automatic drift detection and declarative rollbacks.
 
-ArgoCD continuously reconciles the desired state from Git to the cluster.
+* Secure Secret Management
 
-Automatic drift detection and declarative rollbacks.
+     No secrets committed to Git.
 
-Secure Secret Management
+     AWS Secrets Manager as the central secret store.
 
-No secrets committed to Git.
+     External Secrets Operator (ESO) to sync secrets into Kubernetes.
 
-AWS Secrets Manager as the central secret store.
+* Observability & Operations
 
-External Secrets Operator (ESO) to sync secrets into Kubernetes.
+     Prometheus for metrics scraping and alerting.
 
-Observability & Operations
+     Grafana with curated dashboards for cluster, node, pod, and application metrics.
+ 
+     Foundation for SRE-style SLIs/SLOs and alert-based operations.
 
-Prometheus for metrics scraping and alerting.
+* System Architecture (Mermaid Diagram)
 
-Grafana with curated dashboards for cluster, node, pod, and application metrics.
 
-Foundation for SRE-style SLIs/SLOs and alert-based operations.
-
-System Architecture (Mermaid Diagram)
-graph TD
-    User[User / Client] -->|HTTPS/443| DNS[Route53 (DNS)]
-    DNS --> ALB[Application Load Balancer]
-    ALB --> TG[Target Group (NodePort 30080)]
+     graph TD
+     User[User / Client] -->|HTTPS/443| DNS[Route53 (DNS)]
+     DNS --> ALB[Application Load Balancer]
+     ALB --> TG[Target Group (NodePort 30080)]
 
     subgraph AWS_Cloud[AWS Cloud (ap-south-1)]
         subgraph K8sCluster[Kubernetes Cluster (EC2 Nodes)]
@@ -115,7 +129,14 @@ graph TD
 
     Backend --> OpenAI[OpenAI API]
 
-DevSecOps Pipeline Architecture (Mermaid Diagram)
+
+
+
+
+
+
+* DevSecOps Pipeline Architecture (Mermaid Diagram)
+
 graph LR
     Dev[Developer] -->|Push Code| Git[GitHub Repository]
     Git -->|Webhook| Jenkins[Jenkins CI Server]
@@ -144,67 +165,76 @@ graph LR
         ArgoCD --> Cluster[Kubernetes Cluster]
     end
 
-Technology Stack Table
-Domain	Tooling / Services	Purpose
-Cloud Provider	AWS (EC2, VPC, Route53, ALB, ACM, IAM, Secrets Manager)	Compute, networking, SSL, DNS, identity, secrets
-Infrastructure as Code	Terraform	Provision VPC, subnets, EC2 nodes, ALB, security groups
-Container Runtime	containerd	Lightweight, CRI-compliant container runtime
-Orchestration	Kubernetes (kubeadm cluster)	Pod scheduling, scaling, service abstraction
-CI System	Jenkins	Declarative pipelines for build, test, scan, and packaging
-CD / GitOps	ArgoCD	Declarative sync of K8s manifests from Git
-Security / DevSecOps	Trivy, Gitleaks, SonarQube, OWASP Dependency-Check	Vulnerability scanning, secret detection, SAST, dependency scanning
-Monitoring	Prometheus, Alertmanager	Metrics collection and alerting
-Visualization	Grafana	Dashboarding for cluster and app-level observability
-Secret Management	AWS Secrets Manager + External Secrets Operator	Secure secret storage and sync into K8s
-Frontend	React, Vite, Tailwind CSS, (optionally Framer Motion)	SPA UI, landing page, dashboard
-Backend	FastAPI (Python), Uvicorn/Gunicorn	High-performance async API, business logic
-Database	MongoDB	NoSQL store for chats, configuration, user data
-Container Registry	DockerHub (or compatible registry)	Storage for versioned container images
-Prerequisites
+
+
+
+
+* Technology Stack Table
+
+| Domain                 | Tooling / Services                                      | Purpose                                                             |
+| ---------------------- | ------------------------------------------------------- | ------------------------------------------------------------------- |
+| Cloud Provider         | AWS (EC2, VPC, Route53, ALB, ACM, IAM, Secrets Manager) | Compute, networking, SSL, DNS, identity, secrets                    |
+| Infrastructure as Code | Terraform                                               | Provision VPC, subnets, EC2 nodes, ALB, security groups             |
+| Container Runtime      | containerd                                              | Lightweight, CRI-compliant container runtime                        |
+| Orchestration          | Kubernetes (kubeadm cluster)                            | Pod scheduling, scaling, service abstraction                        |
+| CI System              | Jenkins                                                 | Declarative pipelines for build, test, scan, and packaging          |
+| CD / GitOps            | ArgoCD                                                  | Declarative sync of K8s manifests from Git                          |
+| Security / DevSecOps   | Trivy, Gitleaks, SonarQube, OWASP Dependency-Check      | Vulnerability scanning, secret detection, SAST, dependency scanning |
+| Monitoring             | Prometheus, Alertmanager                                | Metrics collection and alerting                                     |
+| Visualization          | Grafana                                                 | Dashboarding for cluster and app-level observability                |
+| Secret Management      | AWS Secrets Manager + External Secrets Operator         | Secure secret storage and sync into K8s                             |
+| Frontend               | React, Vite, Tailwind CSS, (optionally Framer Motion)   | SPA UI, landing page, dashboard                                     |
+| Backend                | FastAPI (Python), Uvicorn/Gunicorn                      | High-performance async API, business logic                          |
+| Database               | MongoDB                                                 | NoSQL store for chats, configuration, user data                     |
+| Container Registry     | DockerHub (or compatible registry)                      | Storage for versioned container images                              |
+
+
+
+* Prerequisites
 
 Before you clone or deploy this project, ensure the following are available:
 
-Accounts & Cloud Resources
+* Accounts & Cloud Resources
 
-AWS Account with permissions to:
+  AWS Account with permissions to:
+ 
+     Create VPC, subnets, security groups, and route tables.
 
-Create VPC, subnets, security groups, and route tables.
+     Launch EC2 instances (for Kubernetes master and workers).
 
-Launch EC2 instances (for Kubernetes master and workers).
+     Create and manage ALB and Target Groups.
 
-Create and manage ALB and Target Groups.
+     Manage IAM roles and instance profiles.
 
-Manage IAM roles and instance profiles.
+     Use Secrets Manager for storing application secrets.
 
-Use Secrets Manager for storing application secrets.
+     Registered Domain Name managed in Route53 (for HTTPS + Ingress routing).
 
-Registered Domain Name managed in Route53 (for HTTPS + Ingress routing).
+     DockerHub (or container registry) account to push application images.
 
-DockerHub (or container registry) account to push application images.
+     OpenAI API Key for AI functionality in the backend.
 
-OpenAI API Key for AI functionality in the backend.
+* Local Tooling
 
-Local Tooling
+     Terraform: v1.5+
 
-Terraform: v1.5+
+     AWS CLI: v2, configured via aws configure
 
-AWS CLI: v2, configured via aws configure
+     kubectl: Latest stable version
 
-kubectl: Latest stable version
+     Docker Engine / Docker Desktop: Latest version
+ 
+     Helm: Latest version
 
-Docker Engine / Docker Desktop: Latest version
+     Git
 
-Helm: Latest version
+     Optional (for local analysis):
 
-Git
+        SonarQube (Docker-based)
 
-Optional (for local analysis):
+        OWASP Dependency-Check CLI or Docker image
 
-SonarQube (Docker-based)
-
-OWASP Dependency-Check CLI or Docker image
-
-Local Setup
+* Local Setup
 
 This section walks through running the full application locally and executing core security tools prior to any cloud deployment.
 
@@ -216,19 +246,19 @@ cd nextunitech
 
 Within the repository you will find .env.example files for both the frontend and backend (check under fastapi_backend and Frontend/Front-end as applicable).
 
-Copy the example files:
+     Copy the example files:
 
-cp fastapi_backend/.env.example fastapi_backend/.env
-cp frontend/.env.example frontend/.env   # adjust folder name if needed
+     cp fastapi_backend/.env.example fastapi_backend/.env
+     cp frontend/.env.example frontend/.env   # adjust folder name if needed
 
 
-Open each .env file and set:
+     Open each .env file and set:
 
-MONGODB_URI (for local dev: mongodb://localhost:27017)
+     MONGODB_URI (for local dev: mongodb://localhost:27017)
 
-OPENAI_API_KEY
+     OPENAI_API_KEY
 
-Any app-specific secrets or configuration keys.
+     Any app-specific secrets or configuration keys.
 
 These files are local-only and are not meant for production secret management (production uses AWS Secrets Manager + ESO).
 
@@ -789,19 +819,17 @@ This provides a foundation for SRE-style alerting on symptoms, not just raw metr
 
 Validation & Troubleshooting Checklist
 
-Use the following table to quickly diagnose common issues after deployment:
-
-Symptom	Possible Cause	Diagnostic Commands	Suggested Fix
-Pods stuck in Pending	CNI plugin not installed / misconfigured	kubectl get pods -A / kubectl describe pod	Re-apply Calico; ensure pod CIDR matches kubeadm init params.
-Nodes show NotReady	Kubelet / networking issues	kubectl get nodes, journalctl -u kubelet	Check container runtime config, restart kubelet, verify IP and DNS.
-Ingress returns 404 or no response	NGINX Ingress not running or wrong rules	kubectl get ingress -A, kubectl get pods -n ingress-nginx	Ensure ingress controller is running; verify host/path in Ingress manifests.
-Secrets not present in pod	ESO cannot read AWS Secrets Manager	kubectl get externalsecrets -A, kubectl describe externalsecret	Check IAM role permissions; ensure secret name and region match; inspect ESO logs.
-Jenkins build fails on security stage	Gitleaks / Trivy / OWASP / SonarQube failures	Review Jenkins logs and reports	Remove hardcoded secrets, update dependencies, patch vulnerabilities, or configure quality gates appropriately.
-ArgoCD shows OutOfSync	Git manifests differ from cluster state	ArgoCD UI, argocd app diff	Click Sync or resolve manual changes in cluster and re-apply from Git.
-ArgoCD cannot access repo	Invalid Git credentials or URL	ArgoCD UI → Settings → Repositories	Update token/SSH key for Git access, verify correct URL.
-Grafana shows no data	Prometheus not scraping properly	kubectl get pods -n monitoring, inspect Prometheus targets	Check Prometheus scrape configs; ensure services and endpoints are discoverable.
-ALB shows unhealthy targets	NodePort service misconfigured	AWS Console (ALB Target Groups), kubectl get svc -A	Ensure NodePort for ingress is open in SG; verify health check path and port.
-Cleanup Guide (Destroy Instructions + Cost Warning)
+| Symptom                               | Possible Cause                                | Diagnostic Commands                                                 | Suggested Fix                                                                                                   |
+| ------------------------------------- | --------------------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| `Pods` stuck in `Pending`             | CNI plugin not installed / misconfigured      | `kubectl get pods -A` / `kubectl describe pod`                      | Re-apply Calico; ensure pod CIDR matches kubeadm init params.                                                   |
+| Nodes show `NotReady`                 | Kubelet / networking issues                   | `kubectl get nodes`, `journalctl -u kubelet`                        | Check container runtime config, restart kubelet, verify IP and DNS.                                             |
+| Ingress returns `404` or no response  | NGINX Ingress not running or wrong rules      | `kubectl get ingress -A`, `kubectl get pods -n ingress-nginx`       | Ensure ingress controller is running; verify host/path in `Ingress` manifests.                                  |
+| Secrets not present in pod            | ESO cannot read AWS Secrets Manager           | `kubectl get externalsecrets -A`, `kubectl describe externalsecret` | Check IAM role permissions; ensure secret name and region match; inspect ESO logs.                              |
+| Jenkins build fails on security stage | Gitleaks / Trivy / OWASP / SonarQube failures | Review Jenkins logs and reports                                     | Remove hardcoded secrets, update dependencies, patch vulnerabilities, or configure quality gates appropriately. |
+| ArgoCD shows `OutOfSync`              | Git manifests differ from cluster state       | ArgoCD UI, `argocd app diff`                                        | Click **Sync** or resolve manual changes in cluster and re-apply from Git.                                      |
+| ArgoCD cannot access repo             | Invalid Git credentials or URL                | ArgoCD UI → Settings → Repositories                                 | Update token/SSH key for Git access, verify correct URL.                                                        |
+| Grafana shows no data                 | Prometheus not scraping properly              | `kubectl get pods -n monitoring`, inspect Prometheus targets        | Check Prometheus scrape configs; ensure services and endpoints are discoverable.                                |
+| ALB shows unhealthy targets           | NodePort service misconfigured                | AWS Console (ALB Target Groups), `kubectl get svc -A`               | Ensure NodePort for ingress is open in SG; verify health check path and port.                                   |
 
 ⚠ Cost Warning:
 The deployed stack uses multiple EC2 instances, a Kubernetes control plane, an Application Load Balancer, and supporting services. These incur ongoing hourly charges on AWS. Always tear down environments when not in use.
