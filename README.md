@@ -2,6 +2,8 @@
 
 ### **Enterprise-Grade Production DevSecOps Architecture for a Full-Stack AI Application**
 
+<p align="center"> <img src="https://img.shields.io/badge/Status-Active-success?style=flat-square" /> <img src="https://img.shields.io/badge/License-CC%20BY--NC%204.0-blue?style=flat-square" /> <img src="https://img.shields.io/badge/Architecture-Production%20Grade-orange?style=flat-square" /> <img src="https://img.shields.io/badge/Infrastructure-Terraform%20%2B%20AWS-yellow?style=flat-square" /> <img src="https://img.shields.io/badge/Kubernetes-Multi--Node%20Cluster-326ce5?style=flat-square&logo=kubernetes&logoColor=white" /> <img src="https://img.shields.io/badge/CI--CD-Jenkins-red?style=flat-square&logo=jenkins&logoColor=white" /> <img src="https://img.shields.io/badge/Security-Gitleaks%20%2F%20Trivy%20%2F%20SonarQube-orange?style=flat-square" /> <img src="https://img.shields.io/badge/GitOps-ArgoCD-0aaaff?style=flat-square&logo=argo&logoColor=white" /> <img src="https://img.shields.io/badge/Monitoring-Prometheus%20%2B%20Grafana-yellow?style=flat-square&logo=grafana&logoColor=white" /> <img src="https://img.shields.io/badge/Stack-Fullstack%20App-green?style=flat-square" /> </p>
+
 ## **📌 Executive Summary**
 
 The **NextUnitech AI Platform** is a fully production-ready, secure, and automated DevSecOps environment built to emulate a real-world enterprise deployment model. It demonstrates a complete **CI/CD \+ GitOps workflow** with modern cloud-native tooling, including Kubernetes on AWS, Terraform-provisioned infrastructure, externalized secret management, vulnerability scanning, observability stack, and automated deployments.
