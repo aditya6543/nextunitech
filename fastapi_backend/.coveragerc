@@ -1,0 +1,12 @@
+[run]
+branch = True
+source = fastapi_backend
+
+[report]
+skip_empty = True
+
+[paths]
+source =
+    fastapi_backend
+    C:\Users\ttmmt\OneDrive\Desktop\react\fastapi_backend
+    /usr/src/fastapi_backend

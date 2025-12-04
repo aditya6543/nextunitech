@@ -1,0 +1,85 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(
+            name: 'IMAGE_TAG',
+            defaultValue: 'latest',
+            description: 'Docker image tag to deploy'
+        )
+    }
+
+    environment {
+        DOCKERHUB_USERNAME = 'adityadevsecops'
+
+        BACKEND_IMAGE  = "${DOCKERHUB_USERNAME}/nextunitech-backend"
+        FRONTEND_IMAGE = "${DOCKERHUB_USERNAME}/nextunitech-frontend"
+
+        GIT_CREDENTIALS_ID = 'github-creds-nextunitch'
+        GIT_USER_EMAIL = 'adi@nextunitech.com'
+        GIT_USER_NAME  = 'Aditya Kapse'
+        GIT_BRANCH     = 'main'
+    }
+
+    stages {
+        
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Validate Parameter') {
+            steps {
+                echo "Using IMAGE_TAG: ${IMAGE_TAG}"
+            }
+        }
+
+        stage('Update Kubernetes Manifests') {
+            steps {
+                script {
+                    sh """
+                      sed -i 's|image: ${BACKEND_IMAGE}:.*|image: ${BACKEND_IMAGE}:${IMAGE_TAG}|g' deploy/k8s/backend.yaml
+                      sed -i 's|image: ${FRONTEND_IMAGE}:.*|image: ${FRONTEND_IMAGE}:${IMAGE_TAG}|g' deploy/k8s/frontend.yaml
+                    """
+
+                    echo "Updated backend & frontend image tags to: ${IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Commit and Push Changes') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds-nextunitch',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_TOKEN'
+                )]) {
+
+                    sh """
+                        git config user.email '${GIT_USER_EMAIL}'
+                        git config user.name '${GIT_USER_NAME}'
+
+                        git add deploy/k8s/backend.yaml deploy/k8s/frontend.yaml
+
+                        if git diff --cached --quiet; then
+                          echo 'No changes to commit.'
+                        else
+                          git commit -m "Updated K8s manifests to tag ${IMAGE_TAG}"
+                          git push https://${GIT_TOKEN}@github.com/aditya6543/nextunitch.git ${GIT_BRANCH}
+                        fi
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "CD complete. ArgoCD should detect new manifest changes."
+        }
+        failure {
+            echo "❌ CD failed — review logs."
+        }
+    }
+}

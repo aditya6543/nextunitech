@@ -1,0 +1,19 @@
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+# Pin Motor/PyMongo to compatible versions for container build
+motor==3.1.2
+pymongo==4.3.3
+pydantic==2.8.2
+
+# --- CORRECT BCRYPT FIX ---
+passlib==1.7.4
+bcrypt==4.0.1
+# --- END FIX ---
+
+itsdangerous==2.2.0
+python-multipart==0.0.18
+openai==1.51.0
+python-dotenv==1.0.1
+pytest==8.3.3
+
+# httpx>=0.23.0 # Ensure httpx is compatible with openai > 1.0 (pip should handle this if not explicitly pinned lower)

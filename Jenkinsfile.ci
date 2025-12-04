@@ -1,0 +1,129 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(
+            name: 'IMAGE_VERSION',
+            defaultValue: '',
+            description: 'Optional: custom Docker tag (e.g. v1.0.0). Leave empty to use commit hash.'
+        )
+    }
+
+    environment {
+        DOCKERHUB_CREDENTIALS = 'dockerhub-creds'
+        DOCKERHUB_USERNAME    = 'adityadevsecops'
+
+        BACKEND_IMAGE  = "${DOCKERHUB_USERNAME}/nextunitech-backend"
+        FRONTEND_IMAGE = "${DOCKERHUB_USERNAME}/nextunitech-frontend"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Set Image Tag') {
+            steps {
+                script {
+                    if (params.IMAGE_VERSION?.trim()) {
+                        // use the parameter
+                        env.IMAGE_TAG = params.IMAGE_VERSION.trim()
+                    } else {
+                        // fallback: short git commit
+                        def shortCommit = sh(
+                            script: 'git rev-parse --short HEAD',
+                            returnStdout: true
+                        ).trim()
+                        env.IMAGE_TAG = shortCommit
+                    }
+                    echo ">>> Using image tag: ${env.IMAGE_TAG}"
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: DOCKERHUB_CREDENTIALS,
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                      echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                    '''
+                }
+            }
+        }
+
+        stage('Backend: Tests & Scan') {
+            steps {
+                dir('fastapi_backend') {
+                    sh '''
+                      python3 -m venv venv
+                      . venv/bin/activate
+                      pip install -r requirements.txt
+
+                      pytest
+
+                      docker run --rm \
+                        -v $PWD:/project \
+                        aquasec/trivy fs --exit-code 1 --severity HIGH,CRITICAL /project || true
+
+                      docker run --rm \
+                        -v $PWD:/repo \
+                        zricethezav/gitleaks:latest detect \
+                          -s /repo \
+                          --no-git \
+                          --exit-code 1 || true
+                    '''
+                }
+            }
+        }
+
+        stage('Frontend: Tests & Build') {
+            steps {
+                dir('Froent-end') {
+                    sh '''
+                      npm ci
+                      npm test -- --watch=false || true
+                      npm run build
+                    '''
+                }
+            }
+        }
+
+        stage('Build & Push Backend Image') {
+            steps {
+                sh """
+                  echo ">>> Building backend image: ${BACKEND_IMAGE}:${IMAGE_TAG}"
+                  docker build -t ${BACKEND_IMAGE}:${IMAGE_TAG} ./fastapi_backend
+                  docker push ${BACKEND_IMAGE}:${IMAGE_TAG}
+                """
+            }
+        }
+
+        stage('Build & Push Frontend Image') {
+            steps {
+                sh """
+                  echo '>>> Building frontend image: ${FRONTEND_IMAGE}:${IMAGE_TAG}'
+                  docker build -t ${FRONTEND_IMAGE}:${IMAGE_TAG} ./Froent-end
+                  docker push ${FRONTEND_IMAGE}:${IMAGE_TAG}
+                """
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker logout || true'
+        }
+        success {
+            echo "CI pipeline completed successfully. Built & pushed tag: ${IMAGE_TAG}"
+        }
+        failure {
+            echo "CI pipeline FAILED. Check logs."
+        }
+    }
+}

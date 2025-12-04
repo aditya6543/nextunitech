@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chatbot-backend
+  namespace: prod
+  labels:
+    app: chatbot-backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: chatbot-backend
+  template:
+    metadata:
+      labels:
+        app: chatbot-backend
+    spec:
+      containers:
+        - name: backend
+          image: adityadevsecops/nextunitech-backend:v1.6-hotfix
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          env:
+            # Direct internal connection (Fastest & Safest)
+          - name: MONGODB_URI
+  # Format: mongodb://<service-name>.<namespace>:27017/nextunitech
+          value: "mongodb://mongodb.prod.svc.cluster.local:27017/nextunitech"
+          envFrom:
+            # This secret is created automatically by External Secrets Operator
+            - secretRef:
+                name: chatbot-config
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chatbot-backend
+  namespace: prod
+  labels:
+    app: chatbot-backend
+spec:
+  selector:
+    app: chatbot-backend
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

@@ -1,0 +1,49 @@
+title = "Project Gitleaks Config"
+
+[extend]
+# Use default detection rules
+useDefault = true
+
+# ---- Global allowlists (ignore these paths/files everywhere) ----
+[[allowlists]]
+description = "Ignore dependencies, builds, logs, envs, reports, caches, IDE files"
+paths = [
+  # Node & JS builds
+  '''(^|/)node_modules(/|$)''',
+  '''(^|/)\.next(/|$)''',
+  '''(^|/)dist(/|$)''',
+  '''(^|/)build(/|$)''',
+  '''(^|/)out(/|$)''',
+
+  # Python virtual environments
+  '''(^|/)(\.venv|venv|env|\.envs)(/|$)''',
+  '''(^|/)(\.venv|venv|env|\.envs)/Lib/site-packages(/|$)''',
+  '''(^|/)__pycache__(/|$)''',
+
+  # Coverage & cache directories
+  '''(^|/)coverage(/|$)''',
+  '''(^|/)\.nyc_output(/|$)''',
+  '''(^|/)\.cache(/|$)''',
+  '''(^|/)\.parcel-cache(/|$)''',
+  '''(^|/)\.serverless(/|$)''',
+  '''(^|/)tmp(/|$)''',
+  '''(^|/)temp(/|$)''',
+
+  # Logs
+  '''(^|/)logs(/|$)''',
+  '''\.log$''',
+
+  # Environment & config files
+  '''(^|/)\.env(\..*)?$''',
+  '''(^|/)\.npm(/|$)''',
+  '''(^|/)\.stylelintcache$''',
+  '''(^|/)\.eslintcache$''',
+  '''\.tsbuildinfo$''',
+
+  # IDE/editor folders
+  '''(^|/)\.vscode(/|$)''',
+  '''(^|/)\.idea(/|$)''',
+
+  # Reports or auto-generated files
+  '''(^|/)gitleaks-report\.json$'''
+]
